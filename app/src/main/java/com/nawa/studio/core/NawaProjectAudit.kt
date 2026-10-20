@@ -3,7 +3,6 @@ package com.nawa.studio.core
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.zip.ZipFile
-import javax.xml.XMLConstants
 import javax.xml.parsers.DocumentBuilderFactory
 import org.xml.sax.SAXParseException
 import org.xml.sax.helpers.DefaultHandler
@@ -123,8 +122,8 @@ object NawaProjectAudit {
                 factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
                 factory.setFeature("http://xml.org/sax/features/external-general-entities", false)
                 factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false)
-                runCatching { factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "") }
-                runCatching { factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "") }
+                runCatching { factory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalDTD", "") }
+                runCatching { factory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalSchema", "") }
                 val builder = factory.newDocumentBuilder()
                 // Parser defaults may print malformed user XML to stderr; route all parser
                 // diagnostics through the audit result instead of leaking noisy logs.

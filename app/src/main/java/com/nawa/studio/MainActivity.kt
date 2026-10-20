@@ -104,6 +104,7 @@ import com.nawa.studio.core.NawaProject
 import com.nawa.studio.core.NawaValue
 import com.nawa.studio.core.NawaTraceEvent
 import com.nawa.studio.core.NawaProjectAudit
+import com.nawa.studio.core.NawaProjectFinding
 import com.nawa.studio.core.NawaProjectTemplate
 import com.nawa.studio.core.ProjectRepository
 import com.nawa.studio.core.ProjectSearchMatch
@@ -1645,7 +1646,7 @@ private fun NawaCodeEditor(
                 setScalable(true)
                 setText(source)
                 NawaTextMate.applyTo(this, path)
-                subscribeAlways<ContentChangeEvent> {
+                subscribeAlways(ContentChangeEvent::class.java) { _ ->
                     val changed = text.toString()
                     if (changed != latestSource) latestOnChange(changed)
                 }
@@ -2169,8 +2170,8 @@ private fun DiagnosticsScreen(
         Text("فحص المشروع", color = Ink, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Card(colors = CardDefaults.cardColors(containerColor = Panel), border = BorderStroke(1.dp, Border), modifier = Modifier.fillMaxWidth()) {
             Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                val auditErrors = workspaceFindings.count { it.severity == NawaProjectAudit.Severity.ERROR }
-                val auditWarnings = workspaceFindings.count { it.severity == NawaProjectAudit.Severity.WARNING }
+                val auditErrors = workspaceFindings.count { it.severity == NawaProjectFinding.Severity.ERROR }
+                val auditWarnings = workspaceFindings.count { it.severity == NawaProjectFinding.Severity.WARNING }
                 Text("فحص مساحة العمل كاملة", color = Mint, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                 Text("${workspaceFindings.size} ملاحظة · $auditErrors خطأ · $auditWarnings تحذير", color = Muted, fontSize = 11.sp)
                 if (workspaceFindings.isEmpty()) {
@@ -2179,9 +2180,9 @@ private fun DiagnosticsScreen(
                     workspaceFindings.take(60).forEach { finding ->
                         Column(Modifier.fillMaxWidth().background(PanelRaised, RoundedCornerShape(9.dp)).padding(9.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
                             Text("${finding.severity}${finding.line?.let { " · السطر $it" } ?: ""} · ${finding.path.ifBlank { "المشروع" }}", color = when (finding.severity) {
-                                NawaProjectAudit.Severity.ERROR -> Color(0xFFFF9AA3)
-                                NawaProjectAudit.Severity.WARNING -> Warning
-                                NawaProjectAudit.Severity.INFO -> Mint
+                                NawaProjectFinding.Severity.ERROR -> Color(0xFFFF9AA3)
+                                NawaProjectFinding.Severity.WARNING -> Warning
+                                NawaProjectFinding.Severity.INFO -> Mint
                             }, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                             Text(finding.message, color = Ink, fontSize = 11.sp, lineHeight = 16.sp)
                         }
