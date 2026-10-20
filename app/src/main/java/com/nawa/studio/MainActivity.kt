@@ -652,7 +652,8 @@ private fun EditorScreen(
     val context = LocalContext.current
     val latestSource by rememberUpdatedState(source)
     val latestSelectedPath by rememberUpdatedState(selectedPath)
-    val program = remember(source) { safeParseNawa(source) }    LaunchedEffect(source, designScreenName) {
+    val program = remember(source) { safeParseNawa(source) }
+    LaunchedEffect(source, designScreenName) {
         if (program.screens.isNotEmpty() && program.screens.none { it.name == designScreenName }) {
             designScreenName = program.screens.first().name
         }
