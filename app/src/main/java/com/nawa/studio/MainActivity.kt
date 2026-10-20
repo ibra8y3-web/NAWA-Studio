@@ -130,6 +130,7 @@ private val Warning = Color(0xFFFFC777)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installCrashReporter()
         window.statusBarColor = android.graphics.Color.rgb(11, 16, 24)
         window.navigationBarColor = android.graphics.Color.rgb(11, 16, 24)
         NawaTextMate.initialize(applicationContext)
@@ -149,6 +150,28 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    /** Persist the last uncaught crash so device-only failures can be diagnosed from the next launch. */
+    private fun installCrashReporter() {
+        val reportFile = File(filesDir, "nawa-last-crash.txt")
+        val previousHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, error ->
+            runCatching {
+                reportFile.writeText(
+                    "NAWA Studio crash report\n" +
+                        "time=${System.currentTimeMillis()}\n" +
+                        "thread=${thread.name}\n\n" +
+                        android.util.Log.getStackTraceString(error)
+                )
+            }
+            if (previousHandler != null) {
+                previousHandler.uncaughtException(thread, error)
+            } else {
+                android.os.Process.killProcess(android.os.Process.myPid())
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -165,6 +188,8 @@ private fun NawaApp() {
     var projectCreating by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(true) }
     var message by remember { mutableStateOf<String?>(null) }
+    var crashReport by remember { mutableStateOf<String?>(null) }
+    var showCrashReport by remember { mutableStateOf(false) }
 
     fun refreshProjects() {
         scope.launch {
@@ -206,6 +231,18 @@ private fun NawaApp() {
         }.onSuccess { projects = it }
             .onFailure { message = "تعذر فتح مساحة المشاريع: ${it.message ?: "خطأ غير معروف"}" }
         loading = false
+    }
+
+    LaunchedEffect(Unit) {
+        crashReport = withContext(Dispatchers.IO) {
+            runCatching {
+                File(context.filesDir, "nawa-last-crash.txt")
+                    .takeIf { it.isFile && it.length() > 0L }
+                    ?.readText()
+                    ?.takeLast(12_000)
+            }.getOrNull()
+        }
+        showCrashReport = !crashReport.isNullOrBlank()
     }
 
     if (activeProject == null) {
@@ -338,6 +375,39 @@ private fun NawaApp() {
             containerColor = Panel
         )
     }
+
+    if (showCrashReport && !crashReport.isNullOrBlank()) {
+        AlertDialog(
+            onDismissRequest = { showCrashReport = false },
+            title = { Text("تم رصد إغلاق مفاجئ سابق", color = Ink, fontWeight = FontWeight.Bold) },
+            text = {
+                Column(
+                    Modifier.fillMaxWidth().heightIn(max = 360.dp).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("انسخ التقرير وأرسله للدعم لتحديد سبب الإغلاق بدقة. التقرير محلي ولا يُرسل تلقائيًا.", color = Muted, fontSize = 12.sp)
+                    Text(crashReport.orEmpty(), color = Ink, fontFamily = FontFamily.Monospace, fontSize = 10.sp, lineHeight = 14.sp)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                    if (clipboard != null) {
+                        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("NAWA crash report", crashReport.orEmpty()))
+                        message = "تم نسخ تقرير الانهيار. الصقه هنا في المحادثة."
+                    } else {
+                        message = "تعذر الوصول إلى الحافظة؛ افتح التقرير وأرسل آخر الأسطر يدويًا."
+                    }
+                    showCrashReport = false
+                }) { Text("نسخ التقرير") }
+            },
+            dismissButton = { TextButton(onClick = { showCrashReport = false }) { Text("لاحقًا") } },
+            containerColor = Panel,
+            titleContentColor = Ink,
+            textContentColor = Muted
+        )
+    }
+
 }
 
 private fun copyLimited(input: java.io.InputStream, output: java.io.OutputStream, maxBytes: Long) {
@@ -360,6 +430,28 @@ private fun shareFile(context: android.content.Context, file: File, chooserTitle
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
     context.startActivity(Intent.createChooser(intent, chooserTitle))
+}
+
+
+/** Parsing a local file must report a diagnostic instead of crashing the whole UI. */
+private fun safeParseNawa(source: String): com.nawa.studio.core.NawaProgram = runCatching {
+    NawaParser.parse(source)
+}.getOrElse { failure ->
+    com.nawa.studio.core.NawaProgram(
+        appName = "تعذر التحليل",
+        screenName = "Home",
+        states = emptyList(),
+        elements = emptyList(),
+        diagnostics = listOf(
+            com.nawa.studio.core.NawaDiagnostic(
+                1,
+                com.nawa.studio.core.NawaDiagnostic.Severity.ERROR,
+                "تعذر تحليل المصدر: ${failure.javaClass.simpleName}: ${failure.message ?: "خطأ غير معروف"}"
+            )
+        ),
+        hasAppDeclaration = false,
+        hasScreenDeclaration = false
+    )
 }
 
 @Composable
@@ -495,8 +587,8 @@ private fun EditorScreen(
     onMessage: (String) -> Unit,
     onBuildSource: (NawaProject, String, String) -> Unit
 ) {
-    var files by remember(project.id) { mutableStateOf(repository.listFiles(project)) }
-    var folders by remember(project.id) { mutableStateOf(repository.listFolders(project)) }
+    var files by remember(project.id) { mutableStateOf(runCatching { repository.listFiles(project) }.getOrDefault(emptyList())) }
+    var folders by remember(project.id) { mutableStateOf(runCatching { repository.listFolders(project) }.getOrDefault(emptyList())) }
     var selectedPath by remember(project.id) { mutableStateOf("src/main.nawa") }
     var openTabs by remember(project.id) { mutableStateOf(listOf("src/main.nawa")) }
     var source by remember(project.id) { mutableStateOf(runCatching { repository.readSource(project) }.getOrDefault("")) }
@@ -560,8 +652,7 @@ private fun EditorScreen(
     val context = LocalContext.current
     val latestSource by rememberUpdatedState(source)
     val latestSelectedPath by rememberUpdatedState(selectedPath)
-    val program = remember(source) { NawaParser.parse(source) }
-    LaunchedEffect(source, designScreenName) {
+    val program = remember(source) { safeParseNawa(source) }    LaunchedEffect(source, designScreenName) {
         if (program.screens.isNotEmpty() && program.screens.none { it.name == designScreenName }) {
             designScreenName = program.screens.first().name
         }
@@ -1754,7 +1845,7 @@ private fun DesignScreen(
     onMoveElementRequest: (NawaElement, Int) -> Unit,
     onDeleteElementRequest: (NawaElement) -> Unit
 ) {
-    val program = remember(source) { NawaParser.parse(source) }
+    val program = remember(source) { safeParseNawa(source) }
     val currentScreen = program.screens.firstOrNull { it.name == selectedScreenName }
         ?: program.screens.firstOrNull()
     val screenElements = currentScreen?.elements ?: program.elements
@@ -1959,7 +2050,7 @@ private fun DesignScreen(
 
 @Composable
 private fun PreviewScreen(source: String, onBackToCode: () -> Unit) {
-    val program = remember(source) { NawaParser.parse(source) }
+    val program = remember(source) { safeParseNawa(source) }
     val screens = program.screens.ifEmpty {
         listOf(com.nawa.studio.core.NawaScreen(program.screenName, program.states, program.elements, 0, source.length, program.diagnostics))
     }
@@ -2162,7 +2253,7 @@ private fun DiagnosticsScreen(
     repository: ProjectRepository,
     onJumpToCode: () -> Unit
 ) {
-    val program = remember(source, path) { NawaParser.parse(source) }
+    val program = remember(source, path) { safeParseNawa(source) }
     val workspaceFindings = remember(project.id, source, path) {
         NawaProjectAudit.scan(project.directory, if (path == "src/main.nawa") source else null)
     }
