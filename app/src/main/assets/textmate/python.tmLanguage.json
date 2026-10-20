@@ -1,0 +1,117 @@
+{
+  "scopeName": "source.python",
+  "name": "Python",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#decorators"
+    },
+    {
+      "name": "keyword.control.python",
+      "match": "\\b(?:if|elif|else|for|while|break|continue|return|yield|try|except|finally|raise|with|as|pass|assert|async|await|match|case)\\b"
+    },
+    {
+      "name": "storage.type.function.python",
+      "match": "\\b(?:def|class|lambda)\\b"
+    },
+    {
+      "name": "storage.type.python",
+      "match": "\\b(?:global|nonlocal|del|import|from)\\b"
+    },
+    {
+      "name": "constant.language.python",
+      "match": "\\b(?:True|False|None|NotImplemented|Ellipsis)\\b"
+    },
+    {
+      "name": "constant.numeric.python",
+      "match": "(?<![\\w.])(?:0[xX][0-9a-fA-F_]+|0[bB][01_]+|0[oO][0-7_]+|(?:\\d[\\d_]*\\.?[\\d_]*|\\.\\d[\\d_]*)(?:[eE][+-]?\\d[\\d_]*)?j?)(?!\\w)"
+    },
+    {
+      "name": "entity.name.function.python",
+      "match": "(?<=def\\s)[A-Za-z_][A-Za-z0-9_]*"
+    },
+    {
+      "name": "entity.name.type.class.python",
+      "match": "(?<=class\\s)[A-Za-z_][A-Za-z0-9_]*"
+    },
+    {
+      "name": "support.function.builtin.python",
+      "match": "\\b(?:print|len|range|enumerate|zip|map|filter|sum|min|max|sorted|open|str|int|float|bool|list|dict|set|tuple|type|isinstance|super|property|staticmethod|classmethod|input|abs|all|any|next|iter|repr|round|pow|divmod|hex|bin|oct|ord|chr|format|vars|dir|help|id|hash)\\b"
+    },
+    {
+      "name": "keyword.operator.python",
+      "match": "\\b(?:and|or|not|in|is)\\b|(?:\\+|-|\\*\\*?|//?%|==|!=|<=|>=|<<|>>|&|\\||\\^|~)"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.python",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple.double.python",
+          "begin": "\"\"\"",
+          "end": "\"\"\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.python",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.triple.single.python",
+          "begin": "'''",
+          "end": "'''",
+          "patterns": [
+            {
+              "name": "constant.character.escape.python",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.python",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.python",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.python",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.python",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "decorators": {
+      "patterns": [
+        {
+          "name": "entity.name.function.decorator.python",
+          "match": "@[A-Za-z_][A-Za-z0-9_.]*"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "languages": [
+    {
+      "grammar": "textmate/nawa.tmLanguage.json",
+      "name": "nawa",
+      "scopeName": "source.nawa",
+      "languageConfiguration": "textmate/nawa-configuration.json"
+    },
+    {
+      "grammar": "textmate/kotlin.tmLanguage.json",
+      "name": "kotlin",
+      "scopeName": "source.kotlin",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "name": "java",
+      "scopeName": "source.java",
+      "grammar": "textmate/java.tmLanguage.json",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "name": "javascript",
+      "scopeName": "source.js",
+      "grammar": "textmate/javascript.tmLanguage.json",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "name": "json",
+      "scopeName": "source.json",
+      "grammar": "textmate/json.tmLanguage.json",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "name": "xml",
+      "scopeName": "text.xml",
+      "grammar": "textmate/xml.tmLanguage.json",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "name": "css",
+      "scopeName": "source.css",
+      "grammar": "textmate/css.tmLanguage.json",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "name": "plain",
+      "scopeName": "text.plain",
+      "grammar": "textmate/plain.tmLanguage.json",
+      "languageConfiguration": "textmate/plain-configuration.json"
+    },
+    {
+      "grammar": "textmate/python.tmLanguage.json",
+      "name": "python",
+      "scopeName": "source.python",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "grammar": "textmate/shell.tmLanguage.json",
+      "name": "shell",
+      "scopeName": "source.shell",
+      "languageConfiguration": "textmate/plain-configuration.json"
+    },
+    {
+      "grammar": "textmate/cpp.tmLanguage.json",
+      "name": "cpp",
+      "scopeName": "source.cpp",
+      "languageConfiguration": "textmate/kotlin-configuration.json"
+    },
+    {
+      "grammar": "textmate/markdown.tmLanguage.json",
+      "name": "markdown",
+      "scopeName": "text.markdown",
+      "languageConfiguration": "textmate/plain-configuration.json"
+    },
+    {
+      "grammar": "textmate/yaml.tmLanguage.json",
+      "name": "yaml",
+      "scopeName": "source.yaml",
+      "languageConfiguration": "textmate/plain-configuration.json"
+    },
+    {
+      "grammar": "textmate/sql.tmLanguage.json",
+      "name": "sql",
+      "scopeName": "source.sql",
+      "languageConfiguration": "textmate/plain-configuration.json"
+    },
+    {
+      "grammar": "textmate/toml.tmLanguage.json",
+      "name": "toml",
+      "scopeName": "source.toml",
+      "languageConfiguration": "textmate/plain-configuration.json"
+    }
+  ]
+}

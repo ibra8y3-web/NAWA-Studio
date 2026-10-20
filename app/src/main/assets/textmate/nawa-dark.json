@@ -1,0 +1,20 @@
+{
+  "name": "nawa-dark",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#080D13",
+    "editor.foreground": "#D8E5F1",
+    "editorCursor.foreground": "#67E8C2",
+    "editorLineNumber.foreground": "#61778A",
+    "editor.selectionBackground": "#244237",
+    "editor.lineHighlightBackground": "#101925"
+  },
+  "tokenColors": [
+    { "scope": ["keyword", "keyword.control"], "settings": { "foreground": "#C792EA", "fontStyle": "bold" } },
+    { "scope": ["storage.type", "entity.name.type"], "settings": { "foreground": "#82AAFF" } },
+    { "scope": ["string", "string.quoted"], "settings": { "foreground": "#C3E88D" } },
+    { "scope": ["constant.numeric", "constant.language.boolean"], "settings": { "foreground": "#F78C6C" } },
+    { "scope": ["comment"], "settings": { "foreground": "#6B7F91", "fontStyle": "italic" } },
+    { "scope": ["keyword.operator"], "settings": { "foreground": "#89DDFF" } }
+  ]
+}

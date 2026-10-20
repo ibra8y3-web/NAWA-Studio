@@ -1,0 +1,80 @@
+{
+  "scopeName": "source.java",
+  "name": "Java",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#types"
+    },
+    {
+      "include": "#numbers"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.java",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.java",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.java",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.java",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.java",
+          "begin": "'",
+          "end": "'"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.java",
+          "match": "\\b(package|import|class|interface|enum|record|extends|implements|public|private|protected|static|final|abstract|void|return|if|else|switch|case|for|while|do|try|catch|finally|throw|new|this|super|synchronized|volatile|transient|native|instanceof|var)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.java",
+          "match": "\\b(boolean|byte|short|int|long|float|double|char|String|Object|void|Integer|Long|Boolean)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.java",
+          "match": "\\b[0-9]+(\\.[0-9]+)?[fFdDlL]?\\b"
+        }
+      ]
+    }
+  }
+}

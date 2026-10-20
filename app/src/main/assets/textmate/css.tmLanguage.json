@@ -1,0 +1,70 @@
+{
+  "scopeName": "source.css",
+  "name": "CSS",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#selectors"
+    },
+    {
+      "include": "#properties"
+    },
+    {
+      "include": "#numbers"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.css",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.css",
+          "begin": "\"",
+          "end": "\""
+        },
+        {
+          "name": "string.quoted.single.css",
+          "begin": "'",
+          "end": "'"
+        }
+      ]
+    },
+    "selectors": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.css",
+          "match": "(^|[}\\s,])([.#]?[A-Za-z_][A-Za-z0-9_-]*)(?=\\s*\\{)"
+        }
+      ]
+    },
+    "properties": {
+      "patterns": [
+        {
+          "name": "support.type.property-name.css",
+          "match": "[A-Za-z-]+(?=\\s*:)"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.css",
+          "match": "-?[0-9]+(\\.[0-9]+)?(px|dp|em|rem|%|vh|vw)?"
+        }
+      ]
+    }
+  }
+}

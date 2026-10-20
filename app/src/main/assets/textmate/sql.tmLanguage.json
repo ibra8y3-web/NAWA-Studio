@@ -1,0 +1,48 @@
+{
+  "scopeName": "source.sql",
+  "name": "SQL",
+  "patterns": [
+    {
+      "name": "comment.block.sql",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    {
+      "name": "comment.line.double-dash.sql",
+      "match": "--.*$"
+    },
+    {
+      "name": "string.quoted.single.sql",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.sql",
+          "match": "''"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.double.sql",
+      "begin": "\"",
+      "end": "\""
+    },
+    {
+      "name": "keyword.control.sql",
+      "match": "(?i)\\b(?:select|from|where|join|inner|left|right|outer|full|cross|on|as|group|by|order|having|limit|offset|insert|into|values|update|set|delete|create|alter|drop|table|index|view|database|schema|primary|key|foreign|references|not|null|unique|default|check|constraint|and|or|in|is|like|between|exists|case|when|then|else|end|union|all|distinct|with|recursive|returning|begin|commit|rollback|transaction|asc|desc)\\b"
+    },
+    {
+      "name": "support.type.sql",
+      "match": "(?i)\\b(?:int|integer|smallint|bigint|decimal|numeric|float|real|double|text|varchar|char|boolean|bool|date|time|timestamp|blob|json|uuid)\\b"
+    },
+    {
+      "name": "constant.numeric.sql",
+      "match": "(?<![\\w])[-+]?\\d+(?:\\.\\d+)?(?![\\w])"
+    },
+    {
+      "name": "keyword.operator.sql",
+      "match": "<=|>=|<>|!=|=|<|>|\\+|-|\\*|/"
+    }
+  ],
+  "repository": {}
+}

@@ -1,0 +1,66 @@
+{
+  "scopeName": "source.cpp",
+  "name": "C and C++",
+  "patterns": [
+    {
+      "name": "comment.block.cpp",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    {
+      "name": "comment.line.double-slash.cpp",
+      "match": "//.*$"
+    },
+    {
+      "name": "string.quoted.double.cpp",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.cpp",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.cpp",
+      "begin": "'",
+      "end": "'",
+      "patterns": [
+        {
+          "name": "constant.character.escape.cpp",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "meta.preprocessor.cpp",
+      "match": "^\\s*#\\s*(?:include|define|undef|if|ifdef|ifndef|elif|else|endif|pragma|error|warning)\\b.*$"
+    },
+    {
+      "name": "keyword.control.cpp",
+      "match": "\\b(?:if|else|switch|case|default|for|while|do|break|continue|return|try|catch|throw|goto|sizeof|new|delete|class|struct|enum|union|namespace|using|template|typename|public|private|protected|virtual|override|final|this|nullptr|const|static|extern|inline|constexpr|mutable|volatile|register|explicit|friend|operator|typedef|decltype|auto|co_await|co_return|co_yield)\\b"
+    },
+    {
+      "name": "storage.type.cpp",
+      "match": "\\b(?:void|bool|char|wchar_t|char8_t|char16_t|char32_t|short|int|long|signed|unsigned|float|double|size_t|string|std::string|vector|map|set|unordered_map|optional|variant|Result)\\b"
+    },
+    {
+      "name": "constant.language.cpp",
+      "match": "\\b(?:true|false|nullptr|NULL|EOF)\\b"
+    },
+    {
+      "name": "constant.numeric.cpp",
+      "match": "(?<![\\w.])(?:0[xX][0-9A-Fa-f]+|0[bB][01]+|\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)[uUlLfF]*(?!\\w)"
+    },
+    {
+      "name": "entity.name.function.cpp",
+      "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
+    },
+    {
+      "name": "keyword.operator.cpp",
+      "match": "::|->|\\+\\+|--|==|!=|<=|>=|&&|\\|\\||<<|>>|[=+*/%<>!&|^~-]"
+    }
+  ],
+  "repository": {}
+}

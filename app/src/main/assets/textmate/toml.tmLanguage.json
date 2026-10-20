@@ -1,0 +1,47 @@
+{
+  "scopeName": "source.toml",
+  "name": "TOML",
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.toml",
+      "match": "#.*$"
+    },
+    {
+      "name": "entity.name.section.group-title.toml",
+      "match": "^\\s*\\[\\[?[^]\\n]+\\]\\]?\\s*$"
+    },
+    {
+      "name": "string.quoted.double.toml",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.toml",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.toml",
+      "begin": "'",
+      "end": "'"
+    },
+    {
+      "name": "entity.name.tag.toml",
+      "match": "(?m)^\\s*[A-Za-z0-9_-]+(?=\\s*=)"
+    },
+    {
+      "name": "constant.language.toml",
+      "match": "\\b(?:true|false)\\b"
+    },
+    {
+      "name": "constant.numeric.toml",
+      "match": "(?<![\\w])[-+]?\\d+(?:_\\d+)*(?:\\.\\d+)?(?:[eE][-+]?\\d+)?(?![\\w])"
+    },
+    {
+      "name": "punctuation.separator.key-value.toml",
+      "match": "="
+    }
+  ],
+  "repository": {}
+}

@@ -1,0 +1,18 @@
+{
+  "scopeName": "source.kotlin",
+  "name": "Kotlin",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": { "patterns": [{ "name": "comment.line.double-slash.kotlin", "match": "//.*$" }, { "name": "comment.block.kotlin", "begin": "/\\*", "end": "\\*/" }] },
+    "strings": { "patterns": [{ "name": "string.quoted.double.kotlin", "begin": "\"", "end": "\"", "patterns": [{ "name": "constant.character.escape.kotlin", "match": "\\\\." }] }] },
+    "keywords": { "patterns": [{ "name": "keyword.control.kotlin", "match": "\\b(package|import|class|object|interface|fun|val|var|if|else|when|for|while|return|this|super|is|as|in|try|catch|finally|throw|suspend|override|private|public|protected|internal|open|abstract|sealed|data|enum|companion|constructor|init)\\b" }] },
+    "types": { "patterns": [{ "name": "storage.type.kotlin", "match": "\\b(Int|Long|Short|Byte|Float|Double|Boolean|String|Unit|Any|Nothing)\\b" }] },
+    "numbers": { "patterns": [{ "name": "constant.numeric.kotlin", "match": "\\b[0-9]+(\\.[0-9]+)?\\b" }] }
+  }
+}

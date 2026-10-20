@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-labelledby="title desc">
+  <title id="title">NAWA Studio</title><desc id="desc">A dark, modern banner for the NAWA Studio Android development environment.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1224"/><stop offset=".55" stop-color="#151c3a"/><stop offset="1" stop-color="#092b3b"/></linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#62e6d5"/><stop offset="1" stop-color="#8a7cff"/></linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#202b49"/><stop offset="1" stop-color="#111a30"/></linearGradient>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#9daecc" stroke-opacity=".08" stroke-width="1"/></pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".28"/></filter>
+  </defs>
+  <rect width="1200" height="340" rx="26" fill="url(#bg)"/><rect width="1200" height="340" rx="26" fill="url(#grid)"/>
+  <circle cx="1070" cy="40" r="190" fill="#5e55d9" opacity=".13"/><circle cx="1030" cy="330" r="150" fill="#26c9bd" opacity=".10"/>
+  <g transform="translate(56 72)">
+    <rect width="78" height="78" rx="24" fill="url(#glow)"/>
+    <path d="M19 52V26h9l22 26V26h9v26h-9L28 27v25z" fill="#071426" opacity=".97"/>
+    <circle cx="61" cy="19" r="5" fill="#fff" opacity=".9"/>
+  </g>
+  <text x="56" y="194" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="54" font-weight="800" letter-spacing="-1.6" fill="#f4f7ff">NAWA <tspan fill="#71eadb">Studio</tspan></text>
+  <text x="59" y="231" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="19" fill="#c8d3ee">A local-first Android development workspace</text>
+  <g transform="translate(58 263)" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700" letter-spacing=".7">
+    <rect width="142" height="30" rx="15" fill="#1b5c65" stroke="#59dbc9" stroke-opacity=".5"/><text x="71" y="19" text-anchor="middle" fill="#c6fff6">CODE EDITOR</text>
+    <rect x="153" width="149" height="30" rx="15" fill="#35306c" stroke="#9d94ff" stroke-opacity=".55"/><text x="227" y="19" text-anchor="middle" fill="#e4e0ff">VISUAL CANVAS</text>
+    <rect x="313" width="157" height="30" rx="15" fill="#263a59" stroke="#87b5ff" stroke-opacity=".5"/><text x="391" y="19" text-anchor="middle" fill="#dceaff">ANDROID SOURCE</text>
+  </g>
+  <g filter="url(#shadow)" transform="translate(730 54)">
+    <rect width="405" height="238" rx="18" fill="url(#panel)" stroke="#8aa1c9" stroke-opacity=".35"/>
+    <rect width="405" height="39" rx="18" fill="#25314f"/><path d="M0 20h405v19H0z" fill="#25314f"/>
+    <circle cx="21" cy="19" r="4" fill="#ff7777"/><circle cx="36" cy="19" r="4" fill="#ffd36a"/><circle cx="51" cy="19" r="4" fill="#63d9b0"/>
+    <text x="75" y="23" font-family="monospace" font-size="11" fill="#cfdaef">main.nawa</text>
+    <rect x="16" y="54" width="172" height="168" rx="9" fill="#0e172b" stroke="#445274" stroke-opacity=".55"/>
+    <g font-family="monospace" font-size="11"><text x="29" y="76" fill="#8c9bb9">01</text><text x="51" y="76" fill="#62e6d5">screen</text><text x="93" y="76" fill="#d6e2ff">Home {</text>
+      <text x="29" y="98" fill="#8c9bb9">02</text><text x="51" y="98" fill="#b1a4ff"> state</text><text x="91" y="98" fill="#d6e2ff"> count: Int = 0</text>
+      <text x="29" y="120" fill="#8c9bb9">03</text><text x="51" y="120" fill="#c4d3eb"> text</text><text x="86" y="120" fill="#f3cf84"> "Hello"</text>
+      <text x="29" y="142" fill="#8c9bb9">04</text><text x="51" y="142" fill="#62e6d5"> button</text><text x="99" y="142" fill="#d6e2ff"> "Add"</text>
+      <text x="29" y="164" fill="#8c9bb9">05</text><text x="51" y="164" fill="#d6e2ff"> onClick {</text>
+      <text x="29" y="186" fill="#8c9bb9">06</text><text x="69" y="186" fill="#b1a4ff"> count = count + 1</text>
+      <text x="29" y="208" fill="#8c9bb9">07</text><text x="51" y="208" fill="#d6e2ff">}</text></g>
+    <rect x="201" y="54" width="188" height="168" rx="9" fill="#0d1528" stroke="#445274" stroke-opacity=".55"/>
+    <rect x="258" y="64" width="74" height="145" rx="14" fill="#111e37" stroke="#7f95b8" stroke-opacity=".65"/>
+    <rect x="269" y="75" width="52" height="5" rx="2.5" fill="#627491"/>
+    <rect x="267" y="92" width="56" height="26" rx="6" fill="#1c3351"/><text x="295" y="108" font-family="Arial,sans-serif" font-size="7" text-anchor="middle" fill="#d9f6ff">Hello</text>
+    <rect x="267" y="126" width="56" height="24" rx="6" fill="#68dece"/><text x="295" y="141" font-family="Arial,sans-serif" font-size="7" font-weight="700" text-anchor="middle" fill="#0b2431">Add +</text>
+    <rect x="267" y="159" width="56" height="4" rx="2" fill="#405575"/><rect x="267" y="169" width="44" height="4" rx="2" fill="#405575"/>
+  </g>
+  <text x="1136" y="321" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" text-anchor="end" fill="#9aa9c7">SOURCE PROJECT · NOT AN APK SCREENSHOT</text>
+</svg>

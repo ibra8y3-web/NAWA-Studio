@@ -1,0 +1,51 @@
+{
+  "scopeName": "text.markdown",
+  "name": "Markdown",
+  "patterns": [
+    {
+      "name": "markup.heading.markdown",
+      "match": "^\\s{0,3}#{1,6}\\s+.*$"
+    },
+    {
+      "name": "markup.heading.setext.markdown",
+      "match": "^\\s*(?:={2,}|-{2,})\\s*$"
+    },
+    {
+      "name": "markup.bold.markdown",
+      "begin": "\\*\\*|__",
+      "end": "\\*\\*|__"
+    },
+    {
+      "name": "markup.italic.markdown",
+      "begin": "(?<!\\*)\\*(?!\\*)|(?<!_)_(?!_)",
+      "end": "\\*|_"
+    },
+    {
+      "name": "markup.inline.raw.string.markdown",
+      "begin": "`+",
+      "end": "`+"
+    },
+    {
+      "name": "markup.fenced_code.block.markdown",
+      "begin": "^\\s*(```|~~~)",
+      "end": "^\\s*(```|~~~)\\s*$"
+    },
+    {
+      "name": "markup.underline.link.markdown",
+      "match": "!?\\[[^]\\n]+\\]\\([^ )]+(?:\\s+\"[^\"]*\")?\\)"
+    },
+    {
+      "name": "markup.list.unnumbered.markdown",
+      "match": "^\\s{0,3}[-+*]\\s+"
+    },
+    {
+      "name": "markup.list.numbered.markdown",
+      "match": "^\\s{0,3}\\d+[.)]\\s+"
+    },
+    {
+      "name": "markup.quote.markdown",
+      "match": "^\\s{0,3}>.*$"
+    }
+  ],
+  "repository": {}
+}

@@ -1,0 +1,51 @@
+{
+  "scopeName": "source.shell",
+  "name": "Shell Script",
+  "patterns": [
+    {
+      "name": "comment.line.number-sign.shell",
+      "match": "#.*$"
+    },
+    {
+      "name": "string.quoted.double.shell",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.shell",
+          "match": "\\\\."
+        },
+        {
+          "name": "variable.other.shell",
+          "match": "\\$[A-Za-z_][A-Za-z0-9_]*|\\$\\{[^}]+\\}"
+        }
+      ]
+    },
+    {
+      "name": "string.quoted.single.shell",
+      "begin": "'",
+      "end": "'"
+    },
+    {
+      "name": "keyword.control.shell",
+      "match": "\\b(?:if|then|elif|else|fi|for|while|until|do|done|case|esac|in|function|select|time|coproc|return|break|continue|export|local|readonly|declare|typeset|unset|shift|source)\\b"
+    },
+    {
+      "name": "variable.other.shell",
+      "match": "\\$[A-Za-z_][A-Za-z0-9_]*|\\$\\{[^}]+\\}"
+    },
+    {
+      "name": "support.function.shell",
+      "match": "(?<![\\w.-])(?:echo|printf|cd|pwd|ls|cat|grep|find|sed|awk|mkdir|rm|cp|mv|touch|chmod|chown|curl|wget|git|python|python3|pip|npm|node|exit|test|read|set|eval|exec|command|which|basename|dirname|head|tail|sort|uniq|xargs)\\b"
+    },
+    {
+      "name": "constant.numeric.shell",
+      "match": "(?<![\\w])\\d+(?![\\w])"
+    },
+    {
+      "name": "keyword.operator.shell",
+      "match": "&&|\\|\\||>>?|<<|==|!=|=|!|[|&;<>]"
+    }
+  ],
+  "repository": {}
+}
