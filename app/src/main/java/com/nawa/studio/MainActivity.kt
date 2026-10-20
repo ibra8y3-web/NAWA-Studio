@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Save
@@ -57,6 +58,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -83,6 +86,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontFamily
@@ -563,8 +567,8 @@ private fun ProjectCard(project: NawaProject, onOpen: () -> Unit, onDelete: () -
                     Text("${project.id.takeLast(8)} · src/main.nawa", color = Muted, fontSize = 11.sp, fontFamily = FontFamily.Monospace)
                     Text("آخر تعديل: ${formatDate(project.updatedAt)}", color = Muted, fontSize = 11.sp)
                 }
-                IconButton(onClick = onShare) { Icon(Icons.Filled.IosShare, contentDescription = "تصدير المشروع", tint = Muted) }
-                IconButton(onClick = onDelete) { Icon(Icons.Filled.DeleteOutline, contentDescription = "حذف المشروع", tint = Color(0xFFE08B91)) }
+                IconButton(onClick = onShare, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.IosShare, contentDescription = "تصدير المشروع", tint = Muted, modifier = Modifier.size(20.dp)) }
+                IconButton(onClick = onDelete, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.DeleteOutline, contentDescription = "حذف المشروع", tint = Color(0xFFE08B91), modifier = Modifier.size(20.dp)) }
             }
             OutlinedButton(onClick = onOpen, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(13.dp)) {
                 Icon(Icons.Filled.Code, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -608,6 +612,7 @@ private fun EditorScreen(
     var showRenameDialog by remember { mutableStateOf(false) }
     var showDeleteFileDialog by remember { mutableStateOf(false) }
     var showSearchDialog by remember { mutableStateOf(false) }
+    var showEditorMenu by remember { mutableStateOf(false) }
     var showAndroidSettingsDialog by remember { mutableStateOf(false) }
     var showHistoryDialog by remember { mutableStateOf(false) }
     var historyItems by remember { mutableStateOf<List<NawaRevision>>(emptyList()) }
@@ -747,12 +752,12 @@ private fun EditorScreen(
                         }
                         .onFailure { onMessage("لم أرجع إلى قائمة المشاريع حتى لا تفقد التعديلات: ${it.message ?: "تعذر الحفظ"}") }
                 }
-            }) { Icon(Icons.Filled.ArrowBack, contentDescription = "رجوع", tint = Ink) }
+            }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.ArrowBack, contentDescription = "رجوع", tint = Ink, modifier = Modifier.size(20.dp)) }
             Column(Modifier.weight(1f)) {
                 Text(project.name, color = Ink, fontWeight = FontWeight.Bold, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text("${if (isDirty) "تعديلات غير محفوظة" else status} · $selectedPath", color = if (isDirty) Warning else Muted, fontSize = 9.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
-            IconButton(onClick = { showFilesDialog = true }) { Icon(Icons.Filled.FolderOpen, contentDescription = "ملفات المشروع", tint = Mint) }
+            IconButton(onClick = { showFilesDialog = true }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.FolderOpen, contentDescription = "ملفات المشروع", tint = Mint, modifier = Modifier.size(20.dp)) }
             IconButton(onClick = {
                 val pathToSave = selectedPath
                 val sourceToSave = source
@@ -769,45 +774,64 @@ private fun EditorScreen(
                         }
                         .onFailure { status = "فشل الحفظ: ${it.message ?: "خطأ"}" }
                 }
-            }) { Icon(Icons.Filled.Save, contentDescription = "حفظ", tint = Mint) }
-            IconButton(onClick = {
-                scope.launch {
-                    runCatching {
-                        val text = withContext(Dispatchers.IO) {
-                            runCatching { repository.readFile(project, "android.properties") }
-                                .getOrElse { NawaAndroidConfig.defaultTemplate() }
-                        }
-                        NawaAndroidConfig.parse(text)
-                    }.onSuccess { config ->
-                        androidLabel = config.label
-                        androidApplicationId = config.applicationId
-                        androidVersionName = config.versionName
-                        androidVersionCode = config.versionCode.toString()
-                        androidMinSdk = config.minSdk.toString()
-                        androidTargetSdk = config.targetSdk.toString()
-                        androidPermissionsText = config.permissions.joinToString("\n")
-                        androidDependenciesText = config.dependencies.joinToString("\n")
-                        showAndroidSettingsDialog = true
-                    }.onFailure { onMessage("إعدادات Android غير صالحة: ${it.message ?: "خطأ"}") }
+            }, modifier = Modifier.size(40.dp)) { Icon(Icons.Filled.Save, contentDescription = "حفظ", tint = Mint, modifier = Modifier.size(20.dp)) }
+            Box {
+                IconButton(onClick = { showEditorMenu = true }, modifier = Modifier.size(40.dp)) {
+                    Icon(Icons.Filled.MoreVert, contentDescription = "المزيد من أدوات المحرر", tint = Ink, modifier = Modifier.size(20.dp))
                 }
-            }) { Icon(Icons.Filled.Settings, contentDescription = "إعدادات بناء Android", tint = Mint) }
-            IconButton(
-                onClick = {
-                    if (selectedPath == "project.nawa" || isBinaryPath(selectedPath)) {
-                        onMessage("سجل النسخ متاح للملفات النصية فقط.")
-                    } else {
-                        scope.launch {
-                            historyLoading = true
-                            runCatching { withContext(Dispatchers.IO) { repository.listRevisions(project, selectedPath) } }
-                                .onSuccess { historyItems = it; showHistoryDialog = true }
-                                .onFailure { onMessage("تعذر قراءة سجل النسخ: ${it.message ?: "خطأ"}") }
-                            historyLoading = false
+                DropdownMenu(expanded = showEditorMenu, onDismissRequest = { showEditorMenu = false }) {
+                    DropdownMenuItem(
+                        text = { Text("إعدادات بناء Android") },
+                        leadingIcon = { Icon(Icons.Filled.Settings, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        onClick = {
+                            showEditorMenu = false
+                            scope.launch {
+                                runCatching {
+                                    val text = withContext(Dispatchers.IO) {
+                                        runCatching { repository.readFile(project, "android.properties") }
+                                            .getOrElse { NawaAndroidConfig.defaultTemplate() }
+                                    }
+                                    NawaAndroidConfig.parse(text)
+                                }.onSuccess { config ->
+                                    androidLabel = config.label
+                                    androidApplicationId = config.applicationId
+                                    androidVersionName = config.versionName
+                                    androidVersionCode = config.versionCode.toString()
+                                    androidMinSdk = config.minSdk.toString()
+                                    androidTargetSdk = config.targetSdk.toString()
+                                    androidPermissionsText = config.permissions.joinToString("\n")
+                                    androidDependenciesText = config.dependencies.joinToString("\n")
+                                    showAndroidSettingsDialog = true
+                                }.onFailure { onMessage("إعدادات Android غير صالحة: ${it.message ?: "خطأ"}") }
+                            }
                         }
-                    }
-                },
-                enabled = !historyLoading
-            ) { Icon(Icons.Filled.History, contentDescription = "سجل النسخ السابقة", tint = Mint) }
-            IconButton(onClick = { showSearchDialog = true }) { Icon(Icons.Filled.Search, contentDescription = "بحث واستبدال", tint = Ink) }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("سجل النسخ السابقة") },
+                        leadingIcon = { Icon(Icons.Filled.History, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        enabled = !historyLoading,
+                        onClick = {
+                            showEditorMenu = false
+                            if (selectedPath == "project.nawa" || isBinaryPath(selectedPath)) {
+                                onMessage("سجل النسخ متاح للملفات النصية فقط.")
+                            } else {
+                                scope.launch {
+                                    historyLoading = true
+                                    runCatching { withContext(Dispatchers.IO) { repository.listRevisions(project, selectedPath) } }
+                                        .onSuccess { historyItems = it; showHistoryDialog = true }
+                                        .onFailure { onMessage("تعذر قراءة سجل النسخ: ${it.message ?: "خطأ"}") }
+                                    historyLoading = false
+                                }
+                            }
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("بحث واستبدال") },
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        onClick = { showEditorMenu = false; showSearchDialog = true }
+                    )
+                }
+            }
         }
 
         message?.let { text ->
@@ -819,7 +843,7 @@ private fun EditorScreen(
             }
         }
 
-        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(7.dp), verticalAlignment = Alignment.CenterVertically) {
             PageTab("الكود", selected = page == EditorPage.CODE, icon = { Icon(Icons.Filled.Code, contentDescription = null, modifier = Modifier.size(15.dp)) }) { page = EditorPage.CODE }
             PageTab("التصميم", selected = page == EditorPage.DESIGN, icon = { Icon(Icons.Filled.Edit, contentDescription = null, modifier = Modifier.size(15.dp)) }) {
                 if (selectedPath == "src/main.nawa") page = EditorPage.DESIGN
@@ -1774,9 +1798,9 @@ private fun PageTab(label: String, selected: Boolean, icon: @Composable () -> Un
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(1.dp, if (selected) Color(0xFF276452) else Border)
     ) {
-        Row(Modifier.padding(horizontal = 11.dp, vertical = 9.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Row(Modifier.padding(horizontal = 9.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
             androidx.compose.runtime.CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides content) { icon() }
-            Text(label, color = content, fontSize = 12.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)
+            Text(label, color = content, fontSize = 11.sp, maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium)
         }
     }
 }
@@ -1914,8 +1938,10 @@ private fun DesignScreen(
                 Divider(color = Color(0xFFE4EAF0))
                 Text("مساحة التصميم · اضغط على العنصر لتعديل النص والموقع", color = Color(0xFF536577), fontSize = 11.sp)
                 Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+                    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+                    val adaptiveCanvasWidth = maxOf((screenWidthDp - 68).coerceAtLeast(260), (screenElements.map { (it.x ?: 14) + 230 }.maxOrNull() ?: 260))
                     Box(
-                        Modifier.width((screenElements.map { (it.x ?: 14) + 300 }.maxOrNull() ?: 340).coerceIn(340, 4200).dp)
+                        Modifier.width(adaptiveCanvasWidth.coerceIn(260, 4200).dp)
                             .height((screenElements.mapIndexed { index, element -> (element.y ?: (14 + index * 56)) + 90 }.maxOrNull() ?: 340).coerceIn(340, 4200).dp)
                             .background(Color(0xFFF0F5F8), RoundedCornerShape(16.dp))
                             .border(BorderStroke(1.dp, Color(0xFFD9E4EB)), RoundedCornerShape(16.dp))
@@ -2109,8 +2135,10 @@ private fun PreviewScreen(source: String, onBackToCode: () -> Unit) {
                     Divider(color = Color(0xFFE4EAF0))
                     val hasPositionedElements = currentScreen.elements.any { it.x != null && it.y != null }
                     if (hasPositionedElements) {
+                        val screenWidthDp = LocalConfiguration.current.screenWidthDp
+                        val adaptiveCanvasWidth = maxOf((screenWidthDp - 76).coerceAtLeast(250), (currentScreen.elements.map { (it.x ?: 12) + 230 }.maxOrNull() ?: 250))
                         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
-                        Box(Modifier.width((currentScreen.elements.map { (it.x ?: 12) + 300 }.maxOrNull() ?: 440).coerceIn(340, 4200).dp).height((currentScreen.elements.mapIndexed { index, element -> (element.y ?: (12 + index * 64)) + 90 }.maxOrNull() ?: 440).coerceIn(440, 4200).dp).background(Color(0xFFF0F5F8), RoundedCornerShape(16.dp))) {
+                        Box(Modifier.width(adaptiveCanvasWidth.coerceIn(250, 4200).dp).height((currentScreen.elements.mapIndexed { index, element -> (element.y ?: (12 + index * 64)) + 90 }.maxOrNull() ?: 440).coerceIn(440, 4200).dp).background(Color(0xFFF0F5F8), RoundedCornerShape(16.dp))) {
                             currentScreen.elements.forEachIndexed { index, element ->
                                 val x = element.x ?: 12
                                 val y = element.y ?: (12 + index * 64)

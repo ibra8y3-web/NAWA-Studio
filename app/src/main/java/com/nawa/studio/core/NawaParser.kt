@@ -161,7 +161,7 @@ object NawaParser {
     private val togglePattern = Regex("""([A-Za-z_][A-Za-z0-9_]*)\s*=\s*!\s*([A-Za-z_][A-Za-z0-9_]*)""")
     private val navigatePattern = Regex("""navigate\s*\(\s*"((?:\\.|[^"\\])*)"\s*\)""")
     private val repeatHeaderPattern = Regex("""^repeat\s*\(\s*(\d+)\s*\)""")
-    private val interpolationPattern = Regex("""\{([A-Za-z_][A-Za-z0-9_]*)}""")
+    private val interpolationPattern = Regex("""\{([A-Za-z_][A-Za-z0-9_]*)\}""")
 
     /**
      * Parses a complete NawaScript app, including multiple screens and typed navigation actions.
